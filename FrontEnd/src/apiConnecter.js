@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL:'http://localhost:4040/book'
+  baseURL: import.meta.env.VITE_API_URL, // Using Vite env variable 
 });
 
 API.interceptors.request.use((req) => {
