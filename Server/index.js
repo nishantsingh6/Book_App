@@ -3,9 +3,12 @@ const cors = require('cors');
 const app = express();
 
 app.use(express.json());
+const allowedOrigins = ['https://book-app-gilt.vercel.app'];
+
 app.use(cors({
-    origin: 'http://localhost:5173'  // Allow requests from your React frontend
-  }));
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
  //Connet to the database 
 const db = require('./config/dataBase');
