@@ -36,7 +36,7 @@ const PrivateRoute = () => {
       <nav className="bg-gradient-to-bl from-[#f5f7fa] to-[#c3cfe2] p-4 shadow-md">
         <div className="max-w-screen-xl mx-auto flex justify-between items-center">
           <h1 className="font-bold text-2xl text-amber-700">
-            {role === 'Admin' ? 'Admin Dashboard' : 'Book App'}
+            {role === 'Admin' ? 'Admin Dashboard' : 'Book Hub'}
           </h1>
 
           {/* Hamburger icon for small screens */}
