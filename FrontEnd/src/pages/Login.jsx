@@ -14,24 +14,28 @@ const Login = () => {
     handleSubmit
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const res = await API.post("/login", data);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
       const userRole = res.data.user.role;
+
+      toast.success("Login Successful");
+
       if (userRole === "Admin") {
         navigate("/admin/dashboard");
-        toast.success("Login Successful");
       } else if (userRole === "Customer") {
         navigate("/book/dashboard");
-        toast.success("Login Successful");
       }
     } catch (error) {
-      console.log(error.response.data.message || "Login failed");
-      toast.error(error.response.data.message || "Login failed");
+      toast.error(error?.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,7 +53,7 @@ const Login = () => {
         noValidate
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg opacity-95 mr-4"
         style={{
-          backdropFilter: "blur(8px)", // Adds a blur effect to the background
+          backdropFilter: "blur(8px)",
         }}
       >
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h2>
@@ -72,7 +76,7 @@ const Login = () => {
           {errors.email && <p className="text-red-500 text-sm mt-1 text-left">{errors.email.message}</p>}
         </div>
 
-        {/* Password with toggle */}
+        {/* Password */}
         <div className="mb-6 relative">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 text-left">
             Password
@@ -102,20 +106,36 @@ const Login = () => {
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit Button with Spinner */}
         <div className="mb-6">
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200 text-sm"
+            disabled={isLoading}
+            className={`w-full flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200 text-sm ${isLoading ? "opacity-60 cursor-not-allowed" : ""}`}
           >
-            Login
+            {isLoading && (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+            )}
+            {isLoading ? "Logging In..." : "Login"}
           </button>
         </div>
 
         {/* Sign Up Link */}
         <p className="flex justify-center text-sm font-medium">
           Don't have an account?{" "}
-          <button onClick={() => { navigate("/book/signup"); }} className="text-blue-500 cursor-pointer">
+          <button onClick={() => { navigate("/book/signup"); }} className="text-blue-500 cursor-pointer ml-1">
             Sign Up
           </button>
         </p>
